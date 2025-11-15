@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Test</title>
+</head>
+<body>
+    <h2>Test File Upload</h2>
+    <form action="http://localhost:5001/api/upload/single" method="post" enctype="multipart/form-data">
+        <input type="file" name="media" accept="image/*,video/*,audio/*">
+        <br><br>
+        <button type="submit">Upload File</button>
+    </form>
+    
+    <div id="result"></div>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('media', e.target.media.files[0]);
+            
+            try {
+                const response = await fetch('http://localhost:5001/api/upload/single', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                document.getElementById('result').innerHTML = 
+                    `<pre>${JSON.stringify(result, null, 2)}</pre>`;
+            } catch (error) {
+                document.getElementById('result').innerHTML = 
+                    `<pre>Error: ${error.message}</pre>`;
+            }
+        });
+    </script>
+</body>
+</html>

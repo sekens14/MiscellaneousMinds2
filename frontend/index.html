@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miscellaneous Minds - Portal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- THREE.JS IMPORT - ONLY ONCE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <!-- Traditional Homepage -->
+    <div id="traditionalView">
+        <!-- Centered Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo-centered">
+                    <i class="fas fa-brain"></i>
+                    <span>Miscellaneous Minds</span>
+                </div>
+            </div>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>GET IN</h1>
+                <p>Enter the Dreamscape to navigate through the collection of thoughts and ideas</p>
+                <div class="hero-buttons">
+                    <button onclick="enterDreamscape()" class="btn btn-dream">
+                        <i class="fas fa-door-open"></i> Enter Dreamscape
+                    </button>
+                </div>
+                <div class="hero-description">
+                    <p><strong>How it works:</strong> Each glowing orb in the Dreamscape represents a dedicated content page. Click to explore.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Dreamscape Container (hidden initially) -->
+    <div id="dreamscapeView" style="display: none;">
+        <div id="dreamscapeContainer"></div>
+        <div class="dream-ui">
+            <button onclick="exitDreamscape()" class="btn-dream-exit">
+                <i class="fas fa-door-open"></i> Exit Dream
+            </button>
+            <div class="dream-stats">
+                <span id="dreamPagesCount">0</span> pages available
+            </div>
+            <div class="current-selection" id="currentSelection">
+                Hover over orbs to see page titles
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <!-- Dreamscape Files - COMMENT OUT PROBLEMATIC ONES FIRST -->
+    <script src="dreamscape/dream-engine.js"></script>
+    <script src="dreamscape/dream-island.js"></script>
+    <script src="dreamscape/dream-particles.js"></script>
+    <script src="dreamscape/dream-pages.js"></script>
+    <!-- <script src="dreamscape/dream-shaders.js"></script> --> <!-- COMMENT THIS OUT FOR NOW -->
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="dreamscape/dream-engine.js"></script>
+</body>
+</html>
