@@ -6,22 +6,134 @@
     <title>Miscellaneous Minds - Portal</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- THREE.JS IMPORT - ONLY ONCE -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        #traditionalView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 3;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        #dreamscapeView {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 2;
+            display: none;
+        }
+        
+        #dreamscapeContainer {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-dream {
+            background: #FFD700;
+            color: black;
+        }
+
+        .btn-game {
+            background: #FF6B6B;
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-dream:hover {
+            background: #FFED4E;
+        }
+
+        .btn-game:hover {
+            background: #FF8E8E;
+        }
+
+        .hero-description {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .dream-ui {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .btn-dream-exit {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
 </head>
 <body>
-    <!-- Traditional Homepage -->
+    <!-- Traditional Homepage (Default View) -->
     <div id="traditionalView">
-        <!-- Centered Navigation -->
-        <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo-centered">
-                    <i class="fas fa-brain"></i>
-                    <span>Miscellaneous Minds</span>
-                </div>
-            </div>
-        </nav>
-
         <section class="hero">
             <div class="hero-content">
                 <h1>GET IN</h1>
@@ -30,39 +142,326 @@
                     <button onclick="enterDreamscape()" class="btn btn-dream">
                         <i class="fas fa-door-open"></i> Enter Dreamscape
                     </button>
+                    <button onclick="startSimpleGame()" class="btn btn-game">
+                        <i class="fas fa-gamepad"></i> Dream Runner Game
+                    </button>
                 </div>
                 <div class="hero-description">
                     <p><strong>How it works:</strong> Each glowing orb in the Dreamscape represents a dedicated content page. Click to explore.</p>
+                    <p><strong>Dream Runner:</strong> An endless runner game where you navigate through dream worlds.</p>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- Dreamscape Container (hidden initially) -->
-    <div id="dreamscapeView" style="display: none;">
+    <!-- Dreamscape View -->
+    <div id="dreamscapeView">
         <div id="dreamscapeContainer"></div>
         <div class="dream-ui">
             <button onclick="exitDreamscape()" class="btn-dream-exit">
                 <i class="fas fa-door-open"></i> Exit Dream
             </button>
-            <div class="dream-stats">
-                <span id="dreamPagesCount">0</span> pages available
-            </div>
-            <div class="current-selection" id="currentSelection">
-                Hover over orbs to see page titles
-            </div>
         </div>
     </div>
 
-    <script src="app.js"></script>
-    <!-- Dreamscape Files - COMMENT OUT PROBLEMATIC ONES FIRST -->
-    <script src="dreamscape/dream-engine.js"></script>
-    <script src="dreamscape/dream-island.js"></script>
-    <script src="dreamscape/dream-particles.js"></script>
-    <script src="dreamscape/dream-pages.js"></script>
-    <!-- <script src="dreamscape/dream-shaders.js"></script> --> <!-- COMMENT THIS OUT FOR NOW -->
-    
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="app.js"></script>
     <script src="dreamscape/dream-engine.js"></script>
+
+    <!-- Simple Game Script -->
+    <script>
+        // Dreamscape functions
+        function enterDreamscape() {
+            console.log('🌌 Entering dreamscape...');
+            document.getElementById('traditionalView').style.display = 'none';
+            document.getElementById('dreamscapeView').style.display = 'block';
+            
+            if (typeof DreamEngine !== 'undefined') {
+                new DreamEngine();
+            }
+        }
+
+        function exitDreamscape() {
+            console.log('🚪 Exiting dreamscape...');
+            document.getElementById('dreamscapeView').style.display = 'none';
+            document.getElementById('traditionalView').style.display = 'block';
+        }
+
+        // Simple Game Function - WORKING VERSION
+        function startSimpleGame() {
+            console.log('🎮 Starting simple game...');
+            
+            // Create game container
+            const gameHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #001122;">
+                    <canvas id="gameCanvas" style="display: block; width: 100%; height: 100%;"></canvas>
+                    <button onclick="location.reload()" style="
+                        position: fixed; 
+                        top: 20px; 
+                        left: 20px; 
+                        padding: 10px 20px; 
+                        background: #4ECDC4; 
+                        color: white; 
+                        border: none; 
+                        border-radius: 5px; 
+                        cursor: pointer;
+                        z-index: 1000;
+                    ">← Back to Site</button>
+                </div>
+            `;
+            
+            // Replace entire page with game
+            document.body.innerHTML = gameHTML;
+            
+            // Start the game
+            startActualGame();
+        }
+
+    function startActualGame() {
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Game variables
+    const player = {
+        x: canvas.width / 2 - 25,
+        y: canvas.height - 100,
+        width: 50,
+        height: 50,
+        speed: 8
+    };
+    
+    const keys = {};
+    let score = 0;
+    let gameOver = false;
+    
+    // Obstacles array
+    const obstacles = [];
+    let obstacleSpeed = 5;
+    let obstacleSpawnRate = 60; // frames between obstacles
+    
+    // Handle keyboard
+    window.addEventListener('keydown', (e) => {
+        keys[e.key] = true;
+    });
+    
+    window.addEventListener('keyup', (e) => {
+        keys[e.key] = false;
+    });
+    
+    // Draw player
+    function drawPlayer() {
+        // Main body
+        ctx.fillStyle = '#FFD700';
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+        
+        // Eyes
+        ctx.fillStyle = '#000';
+        ctx.fillRect(player.x + 10, player.y + 10, 10, 10);
+        ctx.fillRect(player.x + 30, player.y + 10, 10, 10);
+        
+        // Mouth
+        ctx.fillRect(player.x + 15, player.y + 30, 20, 10);
+    }
+    
+    // Create new obstacle
+    function createObstacle() {
+        const types = ['cube', 'triangle', 'circle'];
+        const type = types[Math.floor(Math.random() * types.length)];
+        
+        const obstacle = {
+            x: Math.random() * (canvas.width - 60),
+            y: -60,
+            width: 60,
+            height: 60,
+            type: type,
+            color: getRandomColor()
+        };
+        
+        obstacles.push(obstacle);
+    }
+    
+    function getRandomColor() {
+        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+    
+    // Draw obstacle
+    function drawObstacle(obstacle) {
+        ctx.fillStyle = obstacle.color;
+        
+        if (obstacle.type === 'cube') {
+            // Draw cube
+            ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            // Cube details
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.fillRect(obstacle.x + 5, obstacle.y + 5, obstacle.width - 10, obstacle.height - 10);
+        } else if (obstacle.type === 'triangle') {
+            // Draw triangle
+            ctx.beginPath();
+            ctx.moveTo(obstacle.x + obstacle.width / 2, obstacle.y);
+            ctx.lineTo(obstacle.x, obstacle.y + obstacle.height);
+            ctx.lineTo(obstacle.x + obstacle.width, obstacle.y + obstacle.height);
+            ctx.closePath();
+            ctx.fill();
+        } else {
+            // Draw circle
+            ctx.beginPath();
+            ctx.arc(obstacle.x + obstacle.width / 2, obstacle.y + obstacle.height / 2, obstacle.width / 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+    
+    // Check collision
+    function checkCollision(player, obstacle) {
+        if (obstacle.type === 'circle') {
+            // Circle collision
+            const circleX = obstacle.x + obstacle.width / 2;
+            const circleY = obstacle.y + obstacle.height / 2;
+            const circleRadius = obstacle.width / 2;
+            
+            const playerCenterX = player.x + player.width / 2;
+            const playerCenterY = player.y + player.height / 2;
+            
+            const distance = Math.sqrt(
+                Math.pow(playerCenterX - circleX, 2) + 
+                Math.pow(playerCenterY - circleY, 2)
+            );
+            
+            return distance < (circleRadius + Math.max(player.width, player.height) / 2);
+        } else {
+            // Rectangle collision
+            return player.x < obstacle.x + obstacle.width &&
+                   player.x + player.width > obstacle.x &&
+                   player.y < obstacle.y + obstacle.height &&
+                   player.y + player.height > obstacle.y;
+        }
+    }
+    
+    // Draw stars
+    function drawStars() {
+        ctx.fillStyle = 'white';
+        for (let i = 0; i < 50; i++) {
+            ctx.fillRect(
+                Math.random() * canvas.width,
+                Math.random() * canvas.height,
+                2, 2
+            );
+        }
+    }
+    
+    // Draw score
+    function drawScore() {
+        ctx.fillStyle = 'white';
+        ctx.font = '24px Arial';
+        ctx.fillText('Score: ' + score, 20, 40);
+        
+        // Draw game instructions
+        ctx.font = '16px Arial';
+        ctx.fillText('Avoid the falling shapes!', 20, 70);
+    }
+    
+    // Draw game over screen
+    function drawGameOver() {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = 'white';
+        ctx.font = '48px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 50);
+        
+        ctx.font = '24px Arial';
+        ctx.fillText('Final Score: ' + score, canvas.width / 2, canvas.height / 2);
+        
+        ctx.fillText('Click Back to Site to play again', canvas.width / 2, canvas.height / 2 + 50);
+        ctx.textAlign = 'left';
+    }
+    
+    let frameCount = 0;
+    
+    // Game loop
+    function gameLoop() {
+        if (gameOver) {
+            drawGameOver();
+            return;
+        }
+        
+        // Clear canvas
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // Draw background
+        drawStars();
+        
+        // Move player
+        if (keys['ArrowLeft'] && player.x > 0) {
+            player.x -= player.speed;
+        }
+        if (keys['ArrowRight'] && player.x < canvas.width - player.width) {
+            player.x += player.speed;
+        }
+        if (keys['ArrowUp'] && player.y > 0) {
+            player.y -= player.speed;
+        }
+        if (keys['ArrowDown'] && player.y < canvas.height - player.height) {
+            player.y += player.speed;
+        }
+        
+        // Spawn obstacles
+        frameCount++;
+        if (frameCount % obstacleSpawnRate === 0) {
+            createObstacle();
+            
+            // Increase difficulty
+            if (score > 0 && score % 500 === 0) {
+                obstacleSpeed += 0.5;
+                obstacleSpawnRate = Math.max(20, obstacleSpawnRate - 5);
+            }
+        }
+        
+        // Update and draw obstacles
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+            const obstacle = obstacles[i];
+            
+            // Move obstacle down
+            obstacle.y += obstacleSpeed;
+            
+            // Draw obstacle
+            drawObstacle(obstacle);
+            
+            // Check collision
+            if (checkCollision(player, obstacle)) {
+                gameOver = true;
+            }
+            
+            // Remove obstacles that are off screen
+            if (obstacle.y > canvas.height) {
+                obstacles.splice(i, 1);
+                score += 10;
+            }
+        }
+        
+        // Draw everything
+        drawPlayer();
+        drawScore();
+        
+        requestAnimationFrame(gameLoop);
+    }
+    
+    // Start the game
+    gameLoop();
+    console.log('✅ Endless runner started! Avoid the falling shapes!');
+}
+
+        // Make functions available globally
+        window.startSimpleGame = startSimpleGame;
+        window.enterDreamscape = enterDreamscape;
+        window.exitDreamscape = exitDreamscape;
+    </script>
 </body>
 </html>

@@ -1,165 +1,111 @@
-// Dream Particle System - Interactive Magical Particles
-class DreamParticleSystem {
+class DreamscapeManager {
     constructor() {
-        this.points = null;
-        this.particles = [];
-        this.particleMeshes = []; // Store individual particle meshes for interaction
-        
-        this.createInteractiveParticles();
+        this.floatingSquares = [];
+        this.magicCircles = [];
+        this.init();
     }
 
-    createInteractiveParticles() {
-        const particleCount = 20; // Reduced count for better interaction
-        this.particleMeshes = [];
+    init() {
+        this.createFloatingSquares(20);
+        this.createMagicCircle(8);
+        this.animate();
+    }
 
-        // Define content for each particle
-        const particleContent = [
-            {
-                title: "Quantum Entanglement",
-                content: "The phenomenon where particles remain connected...",
-                color: 0x4ecdc4
-            },
-            {
-                title: "Neural Networks", 
-                content: "How artificial intelligence mimics the human brain...",
-                color: 0xff6b6b
-            },
-            {
-                title: "String Theory",
-                content: "The theoretical framework where particles are one-dimensional strings...",
-                color: 0x8b5fbf
-            },
-            // Add more content as needed
+    createFloatingSquares(count) {
+        for (let i = 0; i < count; i++) {
+            const square = {
+                x: Math.random() * window.innerWidth,
+                y: Math.random() * window.innerHeight,
+                size: Math.random() * 20 + 5,
+                speedX: (Math.random() - 0.5) * 2,
+                speedY: (Math.random() - 0.5) * 2,
+                color: this.getRandomPastelColor(),
+                rotation: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 2
+            };
+            this.floatingSquares.push(square);
+        }
+    }
+
+    createMagicCircle(ballCount) {
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const radius = 150;
+
+        for (let i = 0; i < ballCount; i++) {
+            const angle = (i / ballCount) * Math.PI * 2;
+            const ball = {
+                x: centerX + Math.cos(angle) * radius,
+                y: centerY + Math.sin(angle) * radius,
+                size: 30,
+                color: this.getRandomMagicColor(),
+                originalX: centerX + Math.cos(angle) * radius,
+                originalY: centerY + Math.sin(angle) * radius,
+                angle: angle,
+                pulse: 0,
+                link: `dream-page-${i + 1}.html` // Replace with your actual page links
+            };
+            this.magicCircles.push(ball);
+        }
+    }
+
+    getRandomPastelColor() {
+        const hues = [120, 180, 240, 300, 60]; // Green, cyan, blue, magenta, yellow
+        const hue = hues[Math.floor(Math.random() * hues.length)];
+        return `hsl(${hue}, 70%, 80%)`;
+    }
+
+    getRandomMagicColor() {
+        const colors = [
+            '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
+            '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9'
         ];
-
-        for (let i = 0; i < particleCount; i++) {
-            const content = particleContent[i % particleContent.length];
-            this.createInteractiveParticle(i, content);
-        }
+        return colors[Math.floor(Math.random() * colors.length)];
     }
 
-    createInteractiveParticle(index, content) {
-        // Create LARGER particles for better visibility
-        const geometry = new THREE.BoxGeometry(1.0, 1.0, 1.0); // Increased from 0.3 to 1.0
-        const material = new THREE.MeshBasicMaterial({
-            color: content.color,
-            transparent: true,
-            opacity: 1.0 // Increased opacity
-        });
-
-        const particle = new THREE.Mesh(geometry, material);
-        
-        // Position CLOSER to center
-        const radius = 8 + Math.random() * 5; // Reduced radius from 15 to 8
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.acos(2 * Math.random() - 1);
-        
-        particle.position.x = radius * Math.sin(phi) * Math.cos(theta);
-        particle.position.y = radius * Math.sin(phi) * Math.sin(theta);
-        particle.position.z = radius * Math.cos(phi);
-        
-        // Store particle data for interaction
-        particle.userData = {
-            id: index,
-            title: content.title,
-            content: content.content,
-            color: content.color,
-            isInteractiveParticle: true,
-            originalX: particle.position.x,
-            originalY: particle.position.y,
-            originalZ: particle.position.z,
-            speed: 2 + Math.random() * 3, // Faster movement
-            offset: Math.random() * Math.PI * 2
-        };
-
-        this.particleMeshes.push(particle);
-        
-        // Add to scene through dream engine
-        if (dreamEngine && dreamEngine.scene) {
-            dreamEngine.scene.add(particle);
-        }
+    animate() {
+        this.updateFloatingSquares();
+        this.updateMagicCircle();
+        this.render();
+        requestAnimationFrame(() => this.animate());
     }
 
-    update(elapsed, delta) {
-        // Update particle positions with fast, erratic movement
-        this.particleMeshes.forEach((particle, index) => {
-            const data = particle.userData;
-            const time = elapsed * data.speed + data.offset;
-            
-            // Fast, erratic movement patterns
-            particle.position.x = data.originalX + Math.sin(time * 2) * 3;
-            particle.position.y = data.originalY + Math.cos(time * 1.7) * 2;
-            particle.position.z = data.originalZ + Math.sin(time * 1.3) * 2.5;
-            
-            // Rotation for visual interest
-            particle.rotation.x += delta * 3;
-            particle.rotation.y += delta * 2;
-            particle.rotation.z += delta * 1.5;
-            
-            // Pulsing opacity
-            particle.material.opacity = 0.6 + Math.sin(time * 4) * 0.3;
+    updateFloatingSquares() {
+        this.floatingSquares.forEach(square => {
+            square.x += square.speedX;
+            square.y += square.speedY;
+            square.rotation += square.rotationSpeed;
+
+            // Bounce off walls
+            if (square.x < 0 || square.x > window.innerWidth) square.speedX *= -1;
+            if (square.y < 0 || square.y > window.innerHeight) square.speedY *= -1;
+
+            // Keep within bounds
+            square.x = Math.max(0, Math.min(window.innerWidth, square.x));
+            square.y = Math.max(0, Math.min(window.innerHeight, square.y));
         });
     }
 
-    // Handle particle clicks
-    handleParticleClick(particle) {
-        console.log('🎯 Particle clicked:', particle.userData.title);
-        
-        // Visual feedback
-        particle.scale.set(1.5, 1.5, 1.5);
-        particle.material.color.set(0xffffff); // Flash white
-        
-        setTimeout(() => {
-            particle.scale.set(1, 1, 1);
-            particle.material.color.set(particle.userData.color);
-        }, 200);
-        
-        // Show content (you can replace this with a proper modal)
-        this.showParticleContent(particle.userData);
+    updateMagicCircle() {
+        this.magicCircles.forEach(ball => {
+            // Gentle pulsing animation
+            ball.pulse = (ball.pulse + 0.05) % (Math.PI * 2);
+            const pulseOffset = Math.sin(ball.pulse) * 5;
+            
+            ball.x = ball.originalX + pulseOffset * Math.cos(ball.angle);
+            ball.y = ball.originalY + pulseOffset * Math.sin(ball.angle);
+        });
     }
 
-    showParticleContent(content) {
-        // Create a simple modal to display content
-        const modal = document.createElement('div');
-        modal.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.9);
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
-            border: 2px solid ${'#' + content.color.toString(16)};
-            max-width: 500px;
-            z-index: 10000;
-            backdrop-filter: blur(10px);
-        `;
-        
-        modal.innerHTML = `
-            <h3 style="color: ${'#' + content.color.toString(16)}; margin-bottom: 1rem;">
-                ${content.title}
-            </h3>
-            <p style="margin-bottom: 1.5rem; line-height: 1.6;">
-                ${content.content}
-            </p>
-            <button onclick="this.parentElement.remove()" 
-                    style="background: ${'#' + content.color.toString(16)}; 
-                           color: white; 
-                           border: none; 
-                           padding: 10px 20px; 
-                           border-radius: 5px; 
-                           cursor: pointer;">
-                Close
-            </button>
-        `;
-        
-        document.body.appendChild(modal);
-    }
-
-    // Get all interactive particles for raycasting
-    getInteractiveParticles() {
-        return this.particleMeshes;
+    render() {
+        // You'll need to implement this based on your rendering system
+        // This could use Canvas, SVG, or DOM elements
+        console.log('Rendering dreamscape...');
+        // Implementation depends on your current setup
     }
 }
-// END OF FILE - NO EXTRA CODE AFTER THIS
+
+// Initialize when the page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new DreamscapeManager();
+});
