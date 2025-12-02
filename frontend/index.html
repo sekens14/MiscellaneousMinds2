@@ -3,15 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Miscellaneous Minds - Portal</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Miscellaneous Minds - Pixel Minimal</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
         body { 
             margin: 0; 
             overflow: hidden;
-            font-family: Arial, sans-serif;
+            font-family: 'Press Start 2P', monospace;
+            background: #0a0a0a;
+            color: #ffffff;
+        }
+
+        /* Pixel Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.03) 2px, rgba(255,255,255,0.03) 4px);
+            pointer-events: none;
+            z-index: 1;
         }
         
         #traditionalView {
@@ -20,8 +47,8 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 3;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            z-index: 2;
+            background: #0a0a0a;
         }
         
         #dreamscapeView {
@@ -46,70 +73,146 @@
             height: 100vh;
             text-align: center;
             color: white;
+            position: relative;
+            z-index: 3;
+        }
+
+        /* Animated Pixel Stars */
+        .pixel-stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .pixel-star {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00ff00;
+            box-shadow: 0 0 4px #00ff00;
+            animation: twinkle 3s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 800px;
+            padding: 40px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 4px solid #00ff00;
+            box-shadow: 
+                inset 0 0 0 2px #0a0a0a,
+                0 0 20px rgba(0, 255, 0, 0.3);
         }
 
         .hero-content h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #00ff00;
+            text-shadow: 
+                2px 2px 0 #000,
+                4px 4px 0 rgba(0, 255, 0, 0.5);
+            letter-spacing: 4px;
+            line-height: 1.8;
         }
 
         .hero-content p {
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+            font-size: 0.7rem;
+            margin-bottom: 30px;
             opacity: 0.9;
+            line-height: 1.8;
+            color: #cccccc;
         }
 
         .hero-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 20px;
             justify-content: center;
-            margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
 
         .btn {
-            padding: 15px 30px;
-            font-size: 1.1rem;
-            border: none;
-            border-radius: 50px;
+            padding: 15px 25px;
+            font-size: 0.6rem;
+            border: 3px solid #00ff00;
+            background: #000000;
+            color: #00ff00;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.1s;
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .btn-dream {
-            background: #FFD700;
-            color: black;
-        }
-
-        .btn-game {
-            background: #FF6B6B;
-            color: white;
+            font-family: 'Press Start 2P', monospace;
+            position: relative;
+            text-transform: uppercase;
+            box-shadow: 4px 4px 0 #00ff00;
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #00ff00;
+            background: #00ff00;
+            color: #000000;
+        }
+
+        .btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 0 0 0 #00ff00;
+        }
+
+        .btn-dream {
+            border-color: #00ff00;
+            box-shadow: 4px 4px 0 #00ff00;
         }
 
         .btn-dream:hover {
-            background: #FFED4E;
+            background: #00ff00;
+            color: #000;
+        }
+
+        .btn-game {
+            border-color: #ff00ff;
+            color: #ff00ff;
+            box-shadow: 4px 4px 0 #ff00ff;
         }
 
         .btn-game:hover {
-            background: #FF8E8E;
+            background: #ff00ff;
+            color: #000;
+            box-shadow: 2px 2px 0 #ff00ff;
         }
 
         .hero-description {
-            max-width: 500px;
-            margin: 0 auto;
-            background: rgba(255,255,255,0.1);
+            max-width: 100%;
+            margin: 30px 0 0 0;
+            background: rgba(0, 0, 0, 0.6);
             padding: 20px;
-            border-radius: 15px;
-            backdrop-filter: blur(10px);
+            border: 2px solid #00ff00;
+            border-style: dashed;
         }
 
+        .hero-description p {
+            margin: 0;
+            font-size: 0.5rem;
+            line-height: 1.6;
+            color: #cccccc;
+        }
+
+        .hero-description p:not(:last-child) {
+            margin-bottom: 15px;
+        }
+
+        .hero-description strong {
+            color: #00ff00;
+        }
+
+        /* Dreamscape UI */
         .dream-ui {
             position: fixed;
             bottom: 20px;
@@ -121,34 +224,152 @@
 
         .btn-dream-exit {
             padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid white;
-            border-radius: 25px;
+            background: #000000;
+            color: #00ff00;
+            border: 3px solid #00ff00;
             cursor: pointer;
-            font-size: 16px;
-            backdrop-filter: blur(10px);
+            font-size: 0.6rem;
+            font-family: 'Press Start 2P', monospace;
+            box-shadow: 4px 4px 0 #00ff00;
+            transition: all 0.1s;
+        }
+
+        .btn-dream-exit:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0 #00ff00;
+            background: #00ff00;
+            color: #000000;
+        }
+
+        /* Pixel Border Animation */
+        @keyframes pixel-border {
+            0% { border-color: #00ff00; }
+            33% { border-color: #00ffff; }
+            66% { border-color: #ff00ff; }
+            100% { border-color: #00ff00; }
+        }
+
+        .hero-content {
+            animation: pixel-border 6s infinite;
+        }
+
+        /* Scanline Effect */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 255, 0, 0.02) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 9999;
+            animation: scan 8s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* Pixel Icon Styles */
+        .pixel-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background: currentColor;
+            clip-path: polygon(
+                0 0, 25% 0, 25% 25%, 50% 25%, 50% 50%, 75% 50%, 75% 75%, 100% 75%,
+                100% 100%, 75% 100%, 75% 75%, 50% 75%, 50% 50%, 25% 50%, 25% 25%, 0 25%
+            );
+        }
+
+        /* Loading Text Animation */
+        .loading-dots::after {
+            content: '...';
+            animation: dots 1.5s infinite;
+        }
+
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 1.2rem;
+                letter-spacing: 2px;
+            }
+
+            .hero-content p {
+                font-size: 0.6rem;
+            }
+
+            .btn {
+                font-size: 0.5rem;
+                padding: 12px 20px;
+            }
+
+            .hero-description p {
+                font-size: 0.45rem;
+            }
+
+            .hero-content {
+                padding: 20px;
+                border-width: 3px;
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Glitch Effect on Hover */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        .hero-content h1:hover {
+            animation: glitch 0.3s infinite;
         }
     </style>
 </head>
 <body>
+    <!-- Scanline Effect -->
+    <div class="scanline"></div>
+
     <!-- Traditional Homepage (Default View) -->
     <div id="traditionalView">
+        <div class="pixel-stars" id="pixelStars"></div>
+        
         <section class="hero">
             <div class="hero-content">
-                <h1>GET IN</h1>
-                <p>Enter the Dreamscape to navigate through the collection of thoughts and ideas</p>
+                <h1>[ GET IN ]</h1>
+                <p>ENTER THE DREAMSCAPE TO NAVIGATE THROUGH THE COLLECTION OF THOUGHTS AND IDEAS</p>
                 <div class="hero-buttons">
                     <button onclick="enterDreamscape()" class="btn btn-dream">
-                        <i class="fas fa-door-open"></i> Enter Dreamscape
+                        <span>▶</span> DREAMSCAPE
                     </button>
                     <button onclick="startSimpleGame()" class="btn btn-game">
-                        <i class="fas fa-gamepad"></i> Dream Runner Game
+                        <span>◆</span> GAME
                     </button>
                 </div>
                 <div class="hero-description">
-                    <p><strong>How it works:</strong> Each glowing orb in the Dreamscape represents a dedicated content page. Click to explore.</p>
-                    <p><strong>Dream Runner:</strong> An endless runner game where you navigate through dream worlds.</p>
+                    <p><strong>[ HOW IT WORKS ]</strong></p>
+                    <p>EACH GLOWING ORB IN THE DREAMSCAPE REPRESENTS A DEDICATED CONTENT PAGE. CLICK TO EXPLORE.</p>
+                    <p><strong>[ DREAM RUNNER ]</strong></p>
+                    <p>AN ENDLESS RUNNER GAME WHERE YOU NAVIGATE THROUGH DREAM WORLDS.</p>
                 </div>
             </div>
         </section>
@@ -159,7 +380,7 @@
         <div id="dreamscapeContainer"></div>
         <div class="dream-ui">
             <button onclick="exitDreamscape()" class="btn-dream-exit">
-                <i class="fas fa-door-open"></i> Exit Dream
+                ◀ EXIT DREAM
             </button>
         </div>
     </div>
@@ -169,8 +390,31 @@
     <script src="app.js"></script>
     <script src="dreamscape/dream-engine.js"></script>
 
-    <!-- Simple Game Script -->
     <script>
+        // Create pixel stars
+        function createPixelStars() {
+            const container = document.getElementById('pixelStars');
+            const starCount = 50;
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'pixel-star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                
+                // Random colors: green, cyan, magenta
+                const colors = ['#00ff00', '#00ffff', '#ff00ff'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                star.style.background = color;
+                star.style.boxShadow = `0 0 4px ${color}`;
+                
+                container.appendChild(star);
+            }
+        }
+
+        createPixelStars();
+
         // Dreamscape functions
         function enterDreamscape() {
             console.log('🌌 Entering dreamscape...');
@@ -188,277 +432,194 @@
             document.getElementById('traditionalView').style.display = 'block';
         }
 
-        // Simple Game Function - WORKING VERSION
+        // Simple Game Function
         function startSimpleGame() {
             console.log('🎮 Starting simple game...');
             
-            // Create game container
             const gameHTML = `
-                <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #001122;">
-                    <canvas id="gameCanvas" style="display: block; width: 100%; height: 100%;"></canvas>
+                <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0a0a0a;">
+                    <canvas id="gameCanvas" style="display: block; width: 100%; height: 100%; image-rendering: pixelated;"></canvas>
                     <button onclick="location.reload()" style="
                         position: fixed; 
                         top: 20px; 
                         left: 20px; 
-                        padding: 10px 20px; 
-                        background: #4ECDC4; 
-                        color: white; 
-                        border: none; 
-                        border-radius: 5px; 
+                        padding: 12px 20px;
+                        font-family: 'Press Start 2P', monospace;
+                        font-size: 0.5rem;
+                        background: #000; 
+                        color: #00ff00; 
+                        border: 3px solid #00ff00;
                         cursor: pointer;
+                        box-shadow: 4px 4px 0 #00ff00;
                         z-index: 1000;
-                    ">← Back to Site</button>
+                    ">◀ EXIT</button>
                 </div>
             `;
             
-            // Replace entire page with game
             document.body.innerHTML = gameHTML;
-            
-            // Start the game
             startActualGame();
         }
 
-    function startActualGame() {
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Set canvas size
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    
-    // Game variables
-    const player = {
-        x: canvas.width / 2 - 25,
-        y: canvas.height - 100,
-        width: 50,
-        height: 50,
-        speed: 8
-    };
-    
-    const keys = {};
-    let score = 0;
-    let gameOver = false;
-    
-    // Obstacles array
-    const obstacles = [];
-    let obstacleSpeed = 5;
-    let obstacleSpawnRate = 60; // frames between obstacles
-    
-    // Handle keyboard
-    window.addEventListener('keydown', (e) => {
-        keys[e.key] = true;
-    });
-    
-    window.addEventListener('keyup', (e) => {
-        keys[e.key] = false;
-    });
-    
-    // Draw player
-    function drawPlayer() {
-        // Main body
-        ctx.fillStyle = '#FFD700';
-        ctx.fillRect(player.x, player.y, player.width, player.height);
-        
-        // Eyes
-        ctx.fillStyle = '#000';
-        ctx.fillRect(player.x + 10, player.y + 10, 10, 10);
-        ctx.fillRect(player.x + 30, player.y + 10, 10, 10);
-        
-        // Mouth
-        ctx.fillRect(player.x + 15, player.y + 30, 20, 10);
-    }
-    
-    // Create new obstacle
-    function createObstacle() {
-        const types = ['cube', 'triangle', 'circle'];
-        const type = types[Math.floor(Math.random() * types.length)];
-        
-        const obstacle = {
-            x: Math.random() * (canvas.width - 60),
-            y: -60,
-            width: 60,
-            height: 60,
-            type: type,
-            color: getRandomColor()
-        };
-        
-        obstacles.push(obstacle);
-    }
-    
-    function getRandomColor() {
-        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7'];
-        return colors[Math.floor(Math.random() * colors.length)];
-    }
-    
-    // Draw obstacle
-    function drawObstacle(obstacle) {
-        ctx.fillStyle = obstacle.color;
-        
-        if (obstacle.type === 'cube') {
-            // Draw cube
-            ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-            // Cube details
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-            ctx.fillRect(obstacle.x + 5, obstacle.y + 5, obstacle.width - 10, obstacle.height - 10);
-        } else if (obstacle.type === 'triangle') {
-            // Draw triangle
-            ctx.beginPath();
-            ctx.moveTo(obstacle.x + obstacle.width / 2, obstacle.y);
-            ctx.lineTo(obstacle.x, obstacle.y + obstacle.height);
-            ctx.lineTo(obstacle.x + obstacle.width, obstacle.y + obstacle.height);
-            ctx.closePath();
-            ctx.fill();
-        } else {
-            // Draw circle
-            ctx.beginPath();
-            ctx.arc(obstacle.x + obstacle.width / 2, obstacle.y + obstacle.height / 2, obstacle.width / 2, 0, Math.PI * 2);
-            ctx.fill();
-        }
-    }
-    
-    // Check collision
-    function checkCollision(player, obstacle) {
-        if (obstacle.type === 'circle') {
-            // Circle collision
-            const circleX = obstacle.x + obstacle.width / 2;
-            const circleY = obstacle.y + obstacle.height / 2;
-            const circleRadius = obstacle.width / 2;
+        function startActualGame() {
+            const canvas = document.getElementById('gameCanvas');
+            const ctx = canvas.getContext('2d');
             
-            const playerCenterX = player.x + player.width / 2;
-            const playerCenterY = player.y + player.height / 2;
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
             
-            const distance = Math.sqrt(
-                Math.pow(playerCenterX - circleX, 2) + 
-                Math.pow(playerCenterY - circleY, 2)
-            );
+            // Pixel scale factor
+            const pixelSize = 4;
+            const gameWidth = Math.floor(canvas.width / pixelSize);
+            const gameHeight = Math.floor(canvas.height / pixelSize);
             
-            return distance < (circleRadius + Math.max(player.width, player.height) / 2);
-        } else {
-            // Rectangle collision
-            return player.x < obstacle.x + obstacle.width &&
-                   player.x + player.width > obstacle.x &&
-                   player.y < obstacle.y + obstacle.height &&
-                   player.y + player.height > obstacle.y;
-        }
-    }
-    
-    // Draw stars
-    function drawStars() {
-        ctx.fillStyle = 'white';
-        for (let i = 0; i < 50; i++) {
-            ctx.fillRect(
-                Math.random() * canvas.width,
-                Math.random() * canvas.height,
-                2, 2
-            );
-        }
-    }
-    
-    // Draw score
-    function drawScore() {
-        ctx.fillStyle = 'white';
-        ctx.font = '24px Arial';
-        ctx.fillText('Score: ' + score, 20, 40);
-        
-        // Draw game instructions
-        ctx.font = '16px Arial';
-        ctx.fillText('Avoid the falling shapes!', 20, 70);
-    }
-    
-    // Draw game over screen
-    function drawGameOver() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        ctx.fillStyle = 'white';
-        ctx.font = '48px Arial';
-        ctx.textAlign = 'center';
-        ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 50);
-        
-        ctx.font = '24px Arial';
-        ctx.fillText('Final Score: ' + score, canvas.width / 2, canvas.height / 2);
-        
-        ctx.fillText('Click Back to Site to play again', canvas.width / 2, canvas.height / 2 + 50);
-        ctx.textAlign = 'left';
-    }
-    
-    let frameCount = 0;
-    
-    // Game loop
-    function gameLoop() {
-        if (gameOver) {
-            drawGameOver();
-            return;
-        }
-        
-        // Clear canvas
-        ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw background
-        drawStars();
-        
-        // Move player
-        if (keys['ArrowLeft'] && player.x > 0) {
-            player.x -= player.speed;
-        }
-        if (keys['ArrowRight'] && player.x < canvas.width - player.width) {
-            player.x += player.speed;
-        }
-        if (keys['ArrowUp'] && player.y > 0) {
-            player.y -= player.speed;
-        }
-        if (keys['ArrowDown'] && player.y < canvas.height - player.height) {
-            player.y += player.speed;
-        }
-        
-        // Spawn obstacles
-        frameCount++;
-        if (frameCount % obstacleSpawnRate === 0) {
-            createObstacle();
+            const player = {
+                x: gameWidth / 2 - 5,
+                y: gameHeight - 20,
+                width: 10,
+                height: 10,
+                speed: 2
+            };
             
-            // Increase difficulty
-            if (score > 0 && score % 500 === 0) {
-                obstacleSpeed += 0.5;
-                obstacleSpawnRate = Math.max(20, obstacleSpawnRate - 5);
-            }
-        }
-        
-        // Update and draw obstacles
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-            const obstacle = obstacles[i];
+            const keys = {};
+            let score = 0;
+            let gameOver = false;
+            const obstacles = [];
+            let obstacleSpeed = 2;
+            let obstacleSpawnRate = 60;
             
-            // Move obstacle down
-            obstacle.y += obstacleSpeed;
+            window.addEventListener('keydown', (e) => keys[e.key] = true);
+            window.addEventListener('keyup', (e) => keys[e.key] = false);
             
-            // Draw obstacle
-            drawObstacle(obstacle);
-            
-            // Check collision
-            if (checkCollision(player, obstacle)) {
-                gameOver = true;
+            function drawPixel(x, y, color, size = 1) {
+                ctx.fillStyle = color;
+                ctx.fillRect(x * pixelSize, y * pixelSize, size * pixelSize, size * pixelSize);
             }
             
-            // Remove obstacles that are off screen
-            if (obstacle.y > canvas.height) {
-                obstacles.splice(i, 1);
-                score += 10;
+            function drawPlayer() {
+                // Draw pixel character
+                drawPixel(player.x, player.y, '#00ff00', 10);
+                // Eyes
+                drawPixel(player.x + 2, player.y + 2, '#000000', 2);
+                drawPixel(player.x + 6, player.y + 2, '#000000', 2);
             }
+            
+            function createObstacle() {
+                obstacles.push({
+                    x: Math.floor(Math.random() * (gameWidth - 10)),
+                    y: -10,
+                    width: 10,
+                    height: 10,
+                    color: ['#ff00ff', '#00ffff', '#ffff00'][Math.floor(Math.random() * 3)]
+                });
+            }
+            
+            function drawObstacle(obstacle) {
+                drawPixel(obstacle.x, obstacle.y, obstacle.color, obstacle.width);
+            }
+            
+            function checkCollision(player, obstacle) {
+                return player.x < obstacle.x + obstacle.width &&
+                       player.x + player.width > obstacle.x &&
+                       player.y < obstacle.y + obstacle.height &&
+                       player.y + player.height > obstacle.y;
+            }
+            
+            function drawScore() {
+                ctx.fillStyle = '#00ff00';
+                ctx.font = '20px "Press Start 2P"';
+                ctx.fillText('SCORE: ' + score, 20, 80);
+                ctx.font = '12px "Press Start 2P"';
+                ctx.fillText('USE ARROWS TO MOVE', 20, 110);
+            }
+            
+            function drawGameOver() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.8)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = '#ff00ff';
+                ctx.font = '40px "Press Start 2P"';
+                ctx.textAlign = 'center';
+                ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 50);
+                
+                ctx.fillStyle = '#00ff00';
+                ctx.font = '20px "Press Start 2P"';
+                ctx.fillText('SCORE: ' + score, canvas.width / 2, canvas.height / 2);
+                
+                ctx.fillStyle = '#00ffff';
+                ctx.font = '14px "Press Start 2P"';
+                ctx.fillText('CLICK EXIT TO RESTART', canvas.width / 2, canvas.height / 2 + 50);
+                ctx.textAlign = 'left';
+            }
+            
+            let frameCount = 0;
+            
+            function gameLoop() {
+                if (gameOver) {
+                    drawGameOver();
+                    return;
+                }
+                
+                // Clear with black
+                ctx.fillStyle = '#0a0a0a';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw pixel grid
+                ctx.strokeStyle = 'rgba(0, 255, 0, 0.1)';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < gameWidth; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(i * pixelSize, 0);
+                    ctx.lineTo(i * pixelSize, canvas.height);
+                    ctx.stroke();
+                }
+                for (let i = 0; i < gameHeight; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, i * pixelSize);
+                    ctx.lineTo(canvas.width, i * pixelSize);
+                    ctx.stroke();
+                }
+                
+                // Move player
+                if (keys['ArrowLeft'] && player.x > 0) player.x -= player.speed;
+                if (keys['ArrowRight'] && player.x < gameWidth - player.width) player.x += player.speed;
+                if (keys['ArrowUp'] && player.y > 0) player.y -= player.speed;
+                if (keys['ArrowDown'] && player.y < gameHeight - player.height) player.y += player.speed;
+                
+                // Spawn obstacles
+                frameCount++;
+                if (frameCount % obstacleSpawnRate === 0) {
+                    createObstacle();
+                    if (score > 0 && score % 500 === 0) {
+                        obstacleSpeed += 0.3;
+                        obstacleSpawnRate = Math.max(20, obstacleSpawnRate - 5);
+                    }
+                }
+                
+                // Update obstacles
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    const obstacle = obstacles[i];
+                    obstacle.y += obstacleSpeed;
+                    drawObstacle(obstacle);
+                    
+                    if (checkCollision(player, obstacle)) {
+                        gameOver = true;
+                    }
+                    
+                    if (obstacle.y > gameHeight) {
+                        obstacles.splice(i, 1);
+                        score += 10;
+                    }
+                }
+                
+                drawPlayer();
+                drawScore();
+                
+                requestAnimationFrame(gameLoop);
+            }
+            
+            gameLoop();
         }
-        
-        // Draw everything
-        drawPlayer();
-        drawScore();
-        
-        requestAnimationFrame(gameLoop);
-    }
-    
-    // Start the game
-    gameLoop();
-    console.log('✅ Endless runner started! Avoid the falling shapes!');
-}
 
-        // Make functions available globally
         window.startSimpleGame = startSimpleGame;
         window.enterDreamscape = enterDreamscape;
         window.exitDreamscape = exitDreamscape;

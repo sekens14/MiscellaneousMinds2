@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learning Hub - Miscellaneous Minds</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background: #000;
+        }
+
+        img {
+            display: block;
+        }
+
+        /* Orange Poster Section - Show FULL poster */
+        .poster-section {
+            width: 100vw;
+            min-height: 100vh;
+            position: relative;
+            background: #ff8c42;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .poster-section img {
+            width: 100%;
+            height: auto;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        /* Portrait Section - Portrait on left, smoke flows right */
+        .portrait-section {
+            width: 100vw;
+            min-height: 100vh;
+            position: relative;
+            background: #000;
+            display: flex;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .portrait-container {
+            position: relative;
+            width: 40%;
+            max-width: 500px;
+            z-index: 5;
+        }
+
+        .portrait-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+            filter: grayscale(100%) contrast(1.1);
+        }
+
+        /* Smoke Effect Canvas */
+        .smoke-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        /* Darkness gradient on right side */
+        .darkness-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(to right, transparent 0%, #000 70%, #000 100%);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        /* Minimal back button */
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 12px 24px;
+            background: rgba(212, 20, 90, 0.9);
+            color: #ffeb3b;
+            border: none;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(212, 20, 90, 1);
+            transform: scale(1.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .portrait-container {
+                width: 60%;
+                max-width: 300px;
+            }
+
+            .portrait-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="index.html" class="back-btn">← BACK</a>
+
+    <!-- Orange Poster - Full Height to Show Complete Poster -->
+    <section class="poster-section">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 900'%3E%3Crect fill='%23ff8c42' width='600' height='900'/%3E%3Ctext x='50' y='100' font-family='Arial' font-size='60' font-weight='bold' fill='%23ffeb3b'%3Eतय करें%3C/text%3E%3Ctext x='50' y='350' font-family='Arial' font-size='24' fill='%23d4145a'%3Eकिस ओर हो तुम, अब%3C/text%3E%3Ctext x='50' y='380' font-family='Arial' font-size='24' fill='%23d4145a'%3Eसुनहरी ऊर्जा-आसन के%3C/text%3E%3Ctext x='50' y='410' font-family='Arial' font-size='24' fill='%23d4145a'%3E-द्बातें प्रश्न में,%3C/text%3E%3Ctext x='50' y='550' font-family='Arial' font-size='32' font-weight='bold' fill='%23d4145a'%3Eअथवा%3C/text%3E%3Ctext x='50' y='620' font-family='Arial' font-size='24' fill='%23d4145a'%3Eकहीं उससे चुटी-दूटी%3C/text%3E%3Ctext x='50' y='650' font-family='Arial' font-size='24' fill='%23d4145a'%3Eअंधेरी निज-कक्षा में तुम्हारा मन,%3C/text%3E%3Ctext x='50' y='680' font-family='Arial' font-size='24' fill='%23d4145a'%3Eकहाँ हो तुम?%3C/text%3E%3C/svg%3E" alt="Poster" id="posterImage">
+    </section>
+
+    <!-- Portrait Section - Portrait on left, smoke flows right into darkness -->
+    <section class="portrait-section" id="portraitSection">
+        <div class="portrait-container">
+            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Crect fill='%23d0d0d0' width='400' height='600'/%3E%3Cellipse cx='200' cy='150' rx='80' ry='100' fill='%23333'/%3E%3Crect x='150' y='220' width='100' height='200' fill='%23222'/%3E%3Cellipse cx='180' cy='120' rx='15' ry='20' fill='%23555'/%3E%3Cellipse cx='220' cy='120' rx='15' ry='20' fill='%23555'/%3E%3Crect x='170' y='300' width='60' height='80' fill='%23888'/%3E%3C/svg%3E" alt="Portrait" id="portraitImage">
+        </div>
+        
+        <canvas class="smoke-canvas" id="smokeCanvas"></canvas>
+        <div class="darkness-overlay"></div>
+    </section>
+
+    <script>
+        // Smoke Effect - Flows from LEFT to RIGHT
+        const canvas = document.getElementById('smokeCanvas');
+        const ctx = canvas.getContext('2d');
+        const portraitSection = document.getElementById('portraitSection');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Smoke Particle Class
+        class SmokeParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                // Start from left side (near portrait)
+                this.x = Math.random() * (canvas.width * 0.4);
+                this.y = Math.random() * canvas.height;
+                
+                // Flow to the RIGHT
+                this.vx = Math.random() * 2 + 1.5; // Move right
+                this.vy = (Math.random() - 0.5) * 0.5; // Slight vertical drift
+                
+                // Life
+                this.life = 1;
+                this.decay = Math.random() * 0.004 + 0.002;
+                
+                // Size
+                this.size = Math.random() * 100 + 80;
+                
+                // Colors from poster: orange, magenta, yellow, white
+                const colors = [
+                    'rgba(255, 140, 66, ',    // Orange
+                    'rgba(212, 20, 90, ',      // Magenta
+                    'rgba(255, 235, 59, ',     // Yellow
+                    'rgba(200, 200, 200, '     // Light gray
+                ];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.opacity = Math.random() * 0.3 + 0.2;
+            }
+
+            update() {
+                // Move RIGHT
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= this.decay;
+                this.size += 1.2;
+                
+                // Slight upward drift as it goes right
+                this.vy += (Math.random() - 0.5) * 0.05;
+
+                // Reset if goes too far right or dies
+                if (this.life <= 0 || this.x > canvas.width) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.life * this.opacity;
+                
+                // Create gradient for smoke
+                const gradient = ctx.createRadialGradient(
+                    this.x, this.y, 0,
+                    this.x, this.y, this.size
+                );
+                gradient.addColorStop(0, this.color + (this.life * this.opacity) + ')');
+                gradient.addColorStop(0.5, this.color + (this.life * this.opacity * 0.5) + ')');
+                gradient.addColorStop(1, this.color + '0)');
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        // Create particles
+        const particles = [];
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new SmokeParticle());
+        }
+
+        let smokeActive = false;
+
+        // Animate smoke
+        function animateSmoke() {
+            if (!smokeActive) return;
+
+            // Slight fade instead of complete clear for trail effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+
+            requestAnimationFrame(animateSmoke);
+        }
+
+        // Activate smoke when portrait section is in view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    smokeActive = true;
+                    animateSmoke();
+                } else {
+                    smokeActive = false;
+                    // Clear canvas when not visible
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        observer.observe(portraitSection);
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        // REPLACE THESE WITH YOUR ACTUAL IMAGE PATHS
+        // Uncomment and update with your image filenames:
+        
+        document.getElementById('posterImage').src = 'images/mukti2.png';
+        document.getElementById('portraitImage').src = 'images/mukti.jpg';
+    </script>
+</body>
+</html>
