@@ -1,112 +1,100 @@
-// api/chat.js - Serverless Function for Gemini API
-
+// api/chat.js
 export default async function handler(req, res) {
-  // CORS Headers - Allow all origins
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
-  // Handle preflight OPTIONS request
-  if (req.method === 'OPTIONS') {
-    res.status(200).end();
-    return;
-  }
+    // Enable CORS
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // Only allow POST
-  if (req.method !== 'POST') {
-    res.status(405).json({ error: 'Method not allowed' });
-    return;
-  }
-
-  try {
-    const { message } = req.body;
-
-    if (!message) {
-      res.status(400).json({ error: 'Message is required' });
-      return;
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
     }
 
-    // Get API key from environment variable
-    const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
-    if (!GEMINI_API_KEY) {
-      console.error('❌ GEMINI_API_KEY not found');
-      res.status(500).json({ error: 'API key not configured' });
-      return;
+    if (req.method !== 'POST') {
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
-    // System prompt about Muktibodh
-    const systemPrompt = `You are an expert on Gajanan Madhav Muktibodh (1917-1964), the influential Hindi modernist poet and writer.
+    try {
+        const { message } = req.body;
 
-BIOGRAPHY:
-- Born in 1917 in Shivpuri, Madhya Pradesh
-- Key figure in Nayi Kavita (New Poetry) movement
-- Influenced by Marxism, existentialism, and psychoanalysis
-- Worked as a journalist and teacher
-- Died in 1964 at age 47
+        if (!message) {
+            return res.status(400).json({ error: 'Message is required' });
+        }
 
-MAJOR WORKS:
-- "Chand ka Munh Tedha Hai" (चाँद का मुँह टेढ़ा है) - 1964
-- "Andhere Mein" (अंधेरे में) - His masterpiece
-- "Ek Sahityik ki Diary" (एक साहित्यिक की डायरी)
-- "Brahmarakshasa" - Famous poem about intellectual alienation
+        // Get API key from environment variable
+        const apiKey = process.env.GEMINI_API_KEY;
 
-THEMES:
-- Social alienation and intellectual struggle
-- Inner psychological conflicts
-- Political awakening and Marxist ideology
-- Surrealism and complex imagery
-- Urban alienation and modern anxiety
+        if (!apiKey) {
+            console.error('❌ GEMINI_API_KEY not found in environment variables');
+            return res.status(500).json({ 
+                error: 'API key not configured. Please add GEMINI_API_KEY to Vercel environment variables.' 
+            });
+        }
 
-Answer questions in a knowledgeable, accessible way. Respond in Hindi or English based on the user's language.`;
+        console.log('📤 Sending request to Gemini API...');
 
-    // Call Gemini API
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{ text: `${systemPrompt}\n\nUser question: ${message}` }]
-          }],
-          generationConfig: {
-            temperature: 0.7,
-            topK: 40,
-            topP: 0.95,
-            maxOutputTokens: 1024,
-          }
-        })
-      }
-    );
+        const response = await fetch(
+            `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `You are an expert on Gajanan Madhav Muktibodh (1917-1964), one of the most important Hindi poets and critics of the 20th century. You should discuss his:
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error('Gemini API Error:', errorData);
-      res.status(response.status).json({ 
-        error: 'Failed to get response from AI',
-        details: errorData 
-      });
-      return;
+- Poetry collections like "Chand Ka Muh Tedha Hai" (चाँद का मुँह टेढ़ा है) and "Andhere Mein" (अँधेरे में)
+- Role in the Nayi Kavita (New Poetry) movement
+- Themes: alienation, identity crisis, social consciousness, psychological depth
+- His unique style: complex imagery, symbolism, long narrative poems
+- His Marxist perspective combined with existential concerns
+- His literary criticism and essays
+- Historical context of post-independence India
+
+Respond in a mix of Hindi and English to make it accessible. Be knowledgeable, engaging, and passionate about his contributions to Hindi literature.
+
+User question: ${message}`
+                        }]
+                    }],
+                    generationConfig: {
+                        temperature: 0.7,
+                        topK: 40,
+                        topP: 0.95,
+                        maxOutputTokens: 1024,
+                    }
+                })
+            }
+        );
+
+        if (!response.ok) {
+            const errorData = await response.text();
+            console.error('❌ Gemini API error:', response.status, errorData);
+            return res.status(response.status).json({ 
+                error: `Gemini API error: ${response.status} - ${errorData}` 
+            });
+        }
+
+        const data = await response.json();
+        console.log('✅ Gemini API response received');
+
+        const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!aiResponse) {
+            console.error('❌ No response text in Gemini response:', JSON.stringify(data));
+            return res.status(500).json({ 
+                error: 'No response from AI',
+                details: data
+            });
+        }
+
+        return res.status(200).json({ response: aiResponse });
+
+    } catch (error) {
+        console.error('❌ Server error:', error);
+        return res.status(500).json({ 
+            error: 'Internal server error',
+            message: error.message 
+        });
     }
-
-    const data = await response.json();
-
-    if (data.candidates && data.candidates[0]?.content?.parts?.[0]?.text) {
-      const aiResponse = data.candidates[0].content.parts[0].text;
-      res.status(200).json({ response: aiResponse });
-    } else {
-      res.status(500).json({ 
-        error: 'Invalid response format from AI',
-        data 
-      });
-    }
-
-  } catch (error) {
-    console.error('Server error:', error);
-    res.status(500).json({ 
-      error: 'Internal server error',
-      message: error.message 
-    });
-  }
 }
