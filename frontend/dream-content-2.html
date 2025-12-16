@@ -600,7 +600,7 @@
                 console.log('📤 Sending message to Gemini API...');
                 
                 // Your Vercel URL with /api/chat endpoint
-                const response = await fetch("https://muktibodh-chatbot-sekens-4611s-projects.vercel.app/api/chat", {
+                const response = await fetch("/api/chat", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
