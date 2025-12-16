@@ -236,6 +236,7 @@
             max-width: 80%;
             animation: messageSlide 0.3s ease;
             line-height: 1.5;
+            white-space: pre-wrap;
         }
 
         @keyframes messageSlide {
@@ -266,6 +267,11 @@
 
         .message.ai strong {
             color: #ffeb3b;
+        }
+
+        .message.error {
+            background: rgba(255, 0, 0, 0.2);
+            border: 1px solid rgba(255, 0, 0, 0.4);
         }
 
         /* Typing Indicator */
@@ -566,7 +572,6 @@
                     console.log('🎨 Portrait visible - triggering smoke!');
                     smokeContainer.classList.add('active');
                     
-                    // After 2.5 seconds: enhance portrait and show chatbot
                     setTimeout(() => {
                         portraitContainer.classList.add('smoke-ended');
                         chatbot.classList.add('visible');
@@ -587,30 +592,29 @@
             const message = chatInput.value.trim();
             if (!message) return;
 
-            // Add user message
             addMessage(message, 'user');
             chatInput.value = '';
             sendBtn.disabled = true;
-
-            // Show typing indicator
             typingIndicator.classList.add('active');
             scrollToBottom();
 
             try {
-                console.log('📤 Sending message to Gemini API...');
+                console.log('📤 Sending to API...');
                 
-                // Your Vercel URL with /api/chat endpoint
                 const response = await fetch("/api/chat", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({
-                        message: message
-                    })
+                    body: JSON.stringify({ message: message })
                 });
 
                 console.log('📥 Response status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const data = await response.json();
                 console.log('📊 Response data:', data);
                 
@@ -619,15 +623,14 @@
                 if (data.response) {
                     addMessage(data.response, 'ai');
                 } else if (data.error) {
-                    console.error('API Error:', data.error);
-                    addMessage(`Error: ${data.error}`, 'ai');
+                    addMessage(`Error: ${data.error}`, 'error');
                 } else {
-                    addMessage("क्षमा करें, मैं अभी जवाब नहीं दे सकता। / Sorry, I cannot respond right now.", 'ai');
+                    addMessage("Sorry, I couldn't get a response.", 'error');
                 }
             } catch (error) {
                 console.error('❌ Error:', error);
                 typingIndicator.classList.remove('active');
-                addMessage(`Error: ${error.message}`, 'ai');
+                addMessage(`Connection error: ${error.message}. Please check if the API is working.`, 'error');
             }
 
             sendBtn.disabled = false;
