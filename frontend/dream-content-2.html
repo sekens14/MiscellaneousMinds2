@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>मुक्तिबोध - Learning Hub</title>
     <style>
         * {
@@ -599,9 +600,9 @@
             scrollToBottom();
 
             try {
-                console.log('📤 Sending to API...');
+                console.log('📤 Sending to API...', message);
                 
-                const response = await fetch("/api/chat", {
+                const response = await fetch("/api/chat-edge", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -617,16 +618,27 @@
                 
                 const data = await response.json();
                 console.log('📊 Response data:', data);
+                console.log('🔍 Response keys:', Object.keys(data));
                 
                 typingIndicator.classList.remove('active');
 
+                // Handle different response formats
+                let replyText = '';
+                
                 if (data.response) {
-                    addMessage(data.response, 'ai');
+                    replyText = data.response;
+                } else if (data.success && data.response) {
+                    replyText = data.response;
+                } else if (data.echo) {
+                    replyText = data.echo;
                 } else if (data.error) {
-                    addMessage(`Error: ${data.error}`, 'error');
+                    replyText = `Error: ${data.error}`;
                 } else {
-                    addMessage("Sorry, I couldn't get a response.", 'error');
+                    replyText = JSON.stringify(data, null, 2);
                 }
+                
+                addMessage(replyText, 'ai');
+
             } catch (error) {
                 console.error('❌ Error:', error);
                 typingIndicator.classList.remove('active');
