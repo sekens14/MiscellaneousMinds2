@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     <title>मुक्तिबोध - Learning Hub</title>
     <style>
         * {
@@ -161,210 +160,6 @@
             z-index: 3;
         }
 
-        /* Chatbot Container */
-        .chatbot-container {
-            position: absolute;
-            right: 5%;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 450px;
-            height: 600px;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(255, 215, 0, 0.3);
-            border-radius: 20px;
-            z-index: 20;
-            opacity: 0;
-            transform: translateY(-50%) scale(0.9);
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-        }
-
-        .chatbot-container.visible {
-            opacity: 1;
-            transform: translateY(-50%) scale(1);
-        }
-
-        /* Chatbot Header */
-        .chatbot-header {
-            padding: 20px;
-            background: linear-gradient(135deg, #d4145a, #ff8c42);
-            border-radius: 18px 18px 0 0;
-            text-align: center;
-            border-bottom: 2px solid rgba(255, 215, 0, 0.3);
-        }
-
-        .chatbot-header h2 {
-            font-size: 1.3rem;
-            color: white;
-            margin-bottom: 5px;
-        }
-
-        .chatbot-header p {
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        /* Chat Messages */
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: rgba(255, 215, 0, 0.3);
-            border-radius: 10px;
-        }
-
-        .message {
-            padding: 12px 16px;
-            border-radius: 15px;
-            max-width: 80%;
-            animation: messageSlide 0.3s ease;
-            line-height: 1.5;
-            white-space: pre-wrap;
-        }
-
-        @keyframes messageSlide {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .message.user {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 5px;
-        }
-
-        .message.ai {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            align-self: flex-start;
-            border-bottom-left-radius: 5px;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-        }
-
-        .message.ai strong {
-            color: #ffeb3b;
-        }
-
-        .message.error {
-            background: rgba(255, 0, 0, 0.2);
-            border: 1px solid rgba(255, 0, 0, 0.4);
-        }
-
-        /* Typing Indicator */
-        .typing-indicator {
-            display: none;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            align-self: flex-start;
-            border: 1px solid rgba(255, 215, 0, 0.2);
-        }
-
-        .typing-indicator.active {
-            display: block;
-        }
-
-        .typing-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #ffeb3b;
-            margin: 0 2px;
-            animation: typingDot 1.4s infinite;
-        }
-
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes typingDot {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.7; }
-            30% { transform: translateY(-10px); opacity: 1; }
-        }
-
-        /* Chat Input */
-        .chat-input-container {
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 0 0 18px 18px;
-            border-top: 1px solid rgba(255, 215, 0, 0.2);
-        }
-
-        .chat-input-wrapper {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            border-radius: 25px;
-            color: white;
-            font-size: 0.95rem;
-            outline: none;
-            transition: all 0.3s;
-        }
-
-        .chat-input:focus {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: rgba(255, 215, 0, 0.5);
-        }
-
-        .chat-input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .send-btn {
-            padding: 12px 24px;
-            background: linear-gradient(135deg, #d4145a, #ff8c42);
-            border: none;
-            border-radius: 25px;
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .send-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(212, 20, 90, 0.4);
-        }
-
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
         /* Back button */
         .back-btn {
             position: fixed;
@@ -456,12 +251,6 @@
                 width: 100px;
                 height: 100px;
             }
-
-            .chatbot-container {
-                width: 90%;
-                right: 5%;
-                height: 500px;
-            }
         }
     </style>
 </head>
@@ -477,7 +266,7 @@
         <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 900'%3E%3Crect fill='%23ff8c42' width='600' height='900'/%3E%3Ctext x='50' y='100' font-family='Arial' font-size='60' font-weight='bold' fill='%23ffeb3b'%3Eतय करें%3C/text%3E%3Ctext x='50' y='350' font-family='Arial' font-size='24' fill='%23d4145a'%3Eकिस ओर हो तुम, अब%3C/text%3E%3Ctext x='50' y='380' font-family='Arial' font-size='24' fill='%23d4145a'%3Eसुनहरी ऊर्जा-आसन के%3C/text%3E%3Ctext x='50' y='410' font-family='Arial' font-size='24' fill='%23d4145a'%3E-द्बातें प्रश्न में,%3C/text%3E%3Ctext x='50' y='550' font-family='Arial' font-size='32' font-weight='bold' fill='%23d4145a'%3Eअथवा%3C/text%3E%3Ctext x='50' y='620' font-family='Arial' font-size='24' fill='%23d4145a'%3Eकहीं उससे चुटी-दूटी%3C/text%3E%3Ctext x='50' y='650' font-family='Arial' font-size='24' fill='%23d4145a'%3Eअंधेरी निज-कक्षा में तुम्हारा मन,%3C/text%3E%3Ctext x='50' y='680' font-family='Arial' font-size='24' fill='%23d4145a'%3Eकहाँ हो तुम?%3C/text%3E%3C/svg%3E" alt="Poster" id="posterImage">
     </section>
 
-    <!-- Portrait Section with Chatbot -->
+    <!-- Portrait Section with Smoke Effect -->
     <section class="portrait-section fade-in-section" id="portraitSection">
         <div class="portrait-container" id="portraitContainer">
             <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 600'%3E%3Crect fill='%23d0d0d0' width='400' height='600'/%3E%3Cellipse cx='200' cy='150' rx='80' ry='100' fill='%23333'/%3E%3Crect x='150' y='220' width='100' height='200' fill='%23222'/%3E%3Cellipse cx='180' cy='120' rx='15' ry='20' fill='%23555'/%3E%3Cellipse cx='220' cy='120' rx='15' ry='20' fill='%23555'/%3E%3Crect x='170' y='300' width='60' height='80' fill='%23888'/%3E%3C/svg%3E" alt="Portrait" id="portraitImage">
@@ -502,44 +291,6 @@
         </div>
         
         <div class="darkness-overlay"></div>
-
-        <!-- Chatbot Interface -->
-        <div class="chatbot-container" id="chatbot">
-            <div class="chatbot-header">
-                <h2>मुक्तिबोध से बात करें</h2>
-                <p>Ask about Muktibodh's poetry, life & philosophy</p>
-            </div>
-
-            <div class="chat-messages" id="chatMessages">
-                <div class="message ai">
-                    नमस्ते! मैं गजानन माधव मुक्तिबोध के बारे में बात कर सकता हूँ। आप उनकी कविताओं, कहानियों, जीवन या दर्शन के बारे में कुछ भी पूछ सकते हैं।
-                    <br><br>
-                    <strong>Hello!</strong> I can discuss Gajanan Madhav Muktibodh's poetry, stories, life, and philosophy. Ask me anything!
-                </div>
-            </div>
-
-            <div class="typing-indicator" id="typingIndicator">
-                <span class="typing-dot"></span>
-                <span class="typing-dot"></span>
-                <span class="typing-dot"></span>
-            </div>
-
-            <div class="chat-input-container">
-                <div class="chat-input-wrapper">
-                    <input 
-                        type="text" 
-                        class="chat-input" 
-                        id="chatInput" 
-                        placeholder="Ask about Muktibodh..."
-                        onkeypress="if(event.key==='Enter') sendMessage()"
-                    >
-                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
-                        <span>Send</span>
-                        <span>→</span>
-                    </button>
-                </div>
-            </div>
-        </div>
     </section>
 
     <script>
@@ -561,11 +312,10 @@
             observer.observe(section);
         });
 
-        // Portrait & Chatbot trigger
+        // Portrait & Smoke trigger
         const portraitSection = document.getElementById('portraitSection');
         const portraitContainer = document.getElementById('portraitContainer');
         const smokeContainer = document.getElementById('smokeContainer');
-        const chatbot = document.getElementById('chatbot');
 
         const portraitObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -575,91 +325,12 @@
                     
                     setTimeout(() => {
                         portraitContainer.classList.add('smoke-ended');
-                        chatbot.classList.add('visible');
                     }, 2500);
                 }
             });
         }, { threshold: 0.7 });
 
         portraitObserver.observe(portraitSection);
-
-        // Chatbot functionality
-        const chatMessages = document.getElementById('chatMessages');
-        const chatInput = document.getElementById('chatInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const typingIndicator = document.getElementById('typingIndicator');
-
-        async function sendMessage() {
-            const message = chatInput.value.trim();
-            if (!message) return;
-
-            addMessage(message, 'user');
-            chatInput.value = '';
-            sendBtn.disabled = true;
-            typingIndicator.classList.add('active');
-            scrollToBottom();
-
-            try {
-                console.log('📤 Sending to API...', message);
-                
-                const response = await fetch("/api/chat-edge", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ message: message })
-                });
-
-                console.log('📥 Response status:', response.status);
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                console.log('📊 Response data:', data);
-                console.log('🔍 Response keys:', Object.keys(data));
-                
-                typingIndicator.classList.remove('active');
-
-                // Handle different response formats
-                let replyText = '';
-                
-                if (data.response) {
-                    replyText = data.response;
-                } else if (data.success && data.response) {
-                    replyText = data.response;
-                } else if (data.echo) {
-                    replyText = data.echo;
-                } else if (data.error) {
-                    replyText = `Error: ${data.error}`;
-                } else {
-                    replyText = JSON.stringify(data, null, 2);
-                }
-                
-                addMessage(replyText, 'ai');
-
-            } catch (error) {
-                console.error('❌ Error:', error);
-                typingIndicator.classList.remove('active');
-                addMessage(`Connection error: ${error.message}. Please check if the API is working.`, 'error');
-            }
-
-            sendBtn.disabled = false;
-            scrollToBottom();
-        }
-
-        function addMessage(text, type) {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}`;
-            messageDiv.textContent = text;
-            chatMessages.appendChild(messageDiv);
-            scrollToBottom();
-        }
-
-        function scrollToBottom() {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
 
         // Loading screen
         window.addEventListener('load', () => {
